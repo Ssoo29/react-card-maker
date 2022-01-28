@@ -1,13 +1,22 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../header/header";
 import Footer from "../footer/footer";
 import styles from "./login.module.css";
 
 const Login = ({ authService }) => {
+  const navigate = useNavigate();
+  const goToMaker = userId => {
+    navigate.push({
+       pathName: '/maker',
+       state: { id: userId }
+      })
+  }
+
   const onLogin = (event) => {
     authService //
       .login(event.currentTarget.textContent)
-      .then();
+      .then(data => goToMaker(data.user.uid));
   };
   return (
     <section className={styles.login}>
