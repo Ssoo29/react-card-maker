@@ -17,6 +17,16 @@ class AuthService {
     return signInWithPopup(this.firbaseAuth, authProvider);
   }
 
+  logout() {
+    this.firbaseAuth.signOut();
+  }
+
+  onAuthChange(onUserChanged) {
+    this.firbaseAuth.onAuthStateChanged(user => {
+      onUserChanged(user);
+    })
+  }
+
   getProvider(providerName) {
     switch (providerName) {
       case "Google":
