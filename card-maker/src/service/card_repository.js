@@ -2,8 +2,7 @@ import { getDatabase, ref, set, remove, onValue } from "firebase/database";
 
 class CardRepository {
   syncCards(userId, onUpdate) {
-    const db = getDatabase();
-    const userRef = ref(db, `${userId}/cards`);
+    const userRef = ref(getDatabase(), `${userId}/cards`);
     onValue(userRef, (snapshot) => {
       const value = snapshot.val();
       value && onUpdate(value);
@@ -12,13 +11,11 @@ class CardRepository {
   }
 
   saveCard(userId, card) {
-    const db = getDatabase();
-    set(ref(db, `${userId}/cards/${card.id}`), card);
+    set(ref(getDatabase(), `${userId}/cards/${card.id}`), card);
   }
   
   deleteCard(userId, card) {
-    const db = getDatabase();
-    const cardRef = ref(db, `${userId}/cards/${card.id}`);
+    const cardRef = ref(getDatabase(), `${userId}/cards/${card.id}`);
     remove(cardRef);
   }
 }
