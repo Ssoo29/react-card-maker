@@ -4,46 +4,14 @@ import Footer from "../footer/footer";
 import Editor from "../editor/editor";
 import Preview from "../preview/preview";
 import styles from "./maker.module.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
-const Maker = ({ authService, FileInput }) => {
-  const [cards, setCards] = useState({
-    '1': {
-      id: "1",
-      name: "sungsoo1",
-      company: "openbase",
-      theme: "light",
-      title: "Software Engineer",
-      email: "fereverv@naver.com",
-      message: "go for it",
-      fileName: "sung",
-      fileURL: null,
-    },
-    '2': {
-      id: "2",
-      name: "sungsoo2",
-      company: "openbase",
-      theme: "dark",
-      title: "Software Engineer",
-      email: "fereverv@naver.com",
-      message: "go for it",
-      fileName: "sung",
-      fileURL: null,
-    },
-    '3': {
-      id: "3",
-      name: "sungsoo3",
-      company: "openbase",
-      theme: "colorful",
-      title: "Software Engineer",
-      email: "fereverv@naver.com",
-      message: "go for it",
-      fileName: "sung",
-      fileURL: null,
-    }
-  });
-
+const Maker = ({ authService, FileInput, cardRepository }) => {
   const navigate = useNavigate();
+  const state = useLocation().state;
+  const [cards, setCards] = useState({});
+  const [userId, setUserId] = useState(state.id && state.id);
+  
   const onLogout = () => {
     authService.logout();
   };
@@ -53,7 +21,8 @@ const Maker = ({ authService, FileInput }) => {
       const updated = { ...cards };
       updated[card.id] = card;
       return updated;
-    })
+    });
+    cardRepository.saveCard(userId, card);
   };
   
   const deleteCard = (card) => {
@@ -62,11 +31,24 @@ const Maker = ({ authService, FileInput }) => {
       delete updated[card.id];
       return updated;
     })
+    cardRepository.deleteCard(userId, card);
   };
 
   useEffect(() => {
+    if (!userId) {
+      return;
+    }
+    const stopSync = cardRepository.syncCards(userId, cards => {
+      setCards(cards);
+    });
+    return () => stopSync();
+  }, [userId]);
+
+  useEffect(() => {
     authService.onAuthChange((user) => {
-      if (!user) {
+      if (user) {
+        setUserId(user.uid);
+      } else {
         navigate("/");
       }
     });
