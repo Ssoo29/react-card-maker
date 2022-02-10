@@ -1,8 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { memo, useRef, useState } from "react";
 import styles from "./card_add_form.module.css";
 import Button from "../button/button";
 
-const CardAddForm = ({ FileInput, onAdd }) => {
+const CardAddForm = memo(({ FileInput, onAdd }) => {
   const formRef = useRef();
   const nameRef = useRef();
   const companyRef = useRef();
@@ -10,7 +10,7 @@ const CardAddForm = ({ FileInput, onAdd }) => {
   const titleRef = useRef();
   const emailRef = useRef();
   const messageRef = useRef();
-  const [file, setFile] = useState({fileName: null, fileURL: null});
+  const [file, setFile] = useState({ fileName: null, fileURL: null });
 
   const onFileChange = file => {
     setFile({
@@ -89,6 +89,6 @@ const CardAddForm = ({ FileInput, onAdd }) => {
       <Button name="Add" onClick={onSubmit}></Button>
     </form>
   );
-};
+});
 
 export default CardAddForm;
