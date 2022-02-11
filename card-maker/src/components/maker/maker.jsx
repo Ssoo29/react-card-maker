@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Header from "../header/header";
 import Footer from "../footer/footer";
 import Editor from "../editor/editor";
@@ -12,9 +12,9 @@ const Maker = ({ authService, FileInput, cardRepository }) => {
   const [cards, setCards] = useState({});
   const [userId, setUserId] = useState(state.id && state.id);
   
-  const onLogout = () => {
+  const onLogout = useCallback(() => {
     authService.logout();
-  };
+  }, [authService]);
 
   const createOrUpdateCard = (card) => {
     setCards(cards => {
@@ -30,7 +30,7 @@ const Maker = ({ authService, FileInput, cardRepository }) => {
       const updated = { ...cards };
       delete updated[card.id];
       return updated;
-    })
+    });
     cardRepository.deleteCard(userId, card);
   };
 
