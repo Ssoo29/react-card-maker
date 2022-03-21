@@ -2,7 +2,6 @@ Dream coding clone coding
  - react version: 17
  - Firebase realtime database 
  - style: post css
- - 
 node version 16.13.2 필요
 
 실행방법: 
